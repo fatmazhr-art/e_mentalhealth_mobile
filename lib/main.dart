@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/0005_dashboard.dart';
+import 'screens/0001_on_boarding.dart';
 import 'theme/app_colors.dart';
 
 void main() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColors.cream,
         useMaterial3: true,
       ),
-      home: const HomeMahasiswaScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }

@@ -285,7 +285,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      backgroundColor: Color(0xFFFCFAF8),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
         child: _tampilSplash ? _buildSplash() : _buildOnboarding(),

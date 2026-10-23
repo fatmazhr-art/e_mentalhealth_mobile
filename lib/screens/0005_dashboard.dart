@@ -5,9 +5,15 @@ import '0006_assesmen.dart';
 import '0010_jadwal_konselor.dart';
 import '0012_mood_tracker.dart';
 import '0013_rehat.dart';
+import '0015_riwayat_asesmen.dart';
+import '0016_kalender.dart';
+import '0017_chatbot.dart';
+import '0018_notifikasi.dart';
+import '0020_profil.dart';
 
 const Color _latar = Color(0xFFFCFAF8);
 const Color _teksGelap = Color(0xFF1A1A1A);
+const Color _navNonaktif = Color(0xFF888888);
 
 class HomeMahasiswaScreen extends StatefulWidget {
   final String nama;
@@ -19,22 +25,29 @@ class HomeMahasiswaScreen extends StatefulWidget {
 }
 
 class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
-  int _tabAktif = 0;
+  // Halaman ini adalah Beranda, jadi tab aktif selalu 0.
+  // Kalender / Notifikasi / Profile dibuka sebagai halaman baru (push),
+  // sehingga nilai ini tidak perlu diubah.
+  final int _tabAktif = 0;
 
   // Daftar menu cepat. Gambar: export dari Figma ke assets/images/
   static final List<_MenuData> _menu = [
-  _MenuData(
-    'Chat dengan\nKonselor',
-    'assets/images/menu_konselor.png',
-    halaman: (context) => const JadwalKonselorScreen(),
-  ),
     _MenuData(
-    'Rehat',
-    'assets/images/menu_rehat.png',
-    halaman: (context) => const RehatScreen(),
-  ),
-  const _MenuData('Forum Diskusi\nAnonim', 'assets/images/menu_forum.png'),
-  const _MenuData('Riwayat\nAsesmen', 'assets/images/menu_riwayat.png'),
+      'Chat dengan\nKonselor',
+      'assets/images/menu_konselor.png',
+      halaman: (context) => const JadwalKonselorScreen(),
+    ),
+    _MenuData(
+      'Rehat',
+      'assets/images/menu_rehat.png',
+      halaman: (context) => const RehatScreen(),
+    ),
+    _MenuData('Forum Diskusi\nAnonim', 'assets/images/menu_forum.png'),
+    _MenuData(
+      'Riwayat\nAsesmen',
+      'assets/images/menu_riwayat.png',
+      halaman: (context) => const RiwayatAsesmenScreen(),
+    ),
   ];
 
   // Data artikel contoh. Ganti dengan data dari API nanti.
@@ -75,18 +88,18 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
                         Expanded(
                           child: _FiturCard(
                             ikon: Icons.assignment_outlined,
-                            judul: 'Asesmen Mandiri',
+                            judul: 'Asesmen\nMandiri',
                             onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AsesmenScreen(), 
-                              ),
-                            ); 
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AsesmenScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: _FiturCard(
                             ikon: Icons.sentiment_satisfied_alt_outlined,
@@ -94,9 +107,12 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const MoodTrackerScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MoodTrackerScreen(),
+                                ),
                               );
-                          },
+                            },
                           ),
                         ),
                       ],
@@ -146,7 +162,10 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
         height: 70,
         child: FloatingActionButton(
           onPressed: () {
-            // TODO: buka chatbot (F006)
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatbotScreen()),
+            );
           },
           backgroundColor: AppColors.maroon,
           elevation: 2,
@@ -157,7 +176,7 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
             errorBuilder: (context, error, stackTrace) => const Icon(
               Icons.chat_bubble_outline,
               color: Colors.white,
-              size: 150,
+              size: 32,
             ),
           ),
         ),
@@ -176,7 +195,7 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
                 ikon: Icons.home_outlined,
                 label: 'Beranda',
                 aktif: _tabAktif == 0,
-                onTap: () => setState(() => _tabAktif = 0),
+                onTap: () {}, // sudah di Beranda
               ),
             ),
             Expanded(
@@ -184,7 +203,12 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
                 ikon: Icons.calendar_month_outlined,
                 label: 'Kalender',
                 aktif: _tabAktif == 1,
-                onTap: () => setState(() => _tabAktif = 1),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CalendarMoodTrackerScreen(),
+                  ),
+                ),
               ),
             ),
             const SizedBox(width: 84), // ruang untuk tombol chatbot
@@ -193,7 +217,12 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
                 ikon: Icons.move_to_inbox_outlined,
                 label: 'Notifikasi',
                 aktif: _tabAktif == 2,
-                onTap: () => setState(() => _tabAktif = 2),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),
+                  ),
+                ),
               ),
             ),
             Expanded(
@@ -201,7 +230,14 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
                 ikon: Icons.person_outline,
                 label: 'Profile',
                 aktif: _tabAktif == 3,
-                onTap: () => setState(() => _tabAktif = 3),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -326,15 +362,15 @@ class _MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-      final halaman = data.halaman;
-      if (halaman == null) {
-        // TODO: halaman untuk menu ini belum dibuat
-        return;
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: halaman),
-      );
+        final halaman = data.halaman;
+        if (halaman == null) {
+          // TODO: halaman untuk menu ini belum dibuat
+          return;
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: halaman),
+        );
       },
       child: Column(
         children: [
@@ -650,6 +686,8 @@ class _ArtikelCard extends StatelessWidget {
 }
 
 // ---------------- Item navigasi bawah ----------------
+// Aktif  : maroon + bold
+// Nonaktif: abu-abu + normal
 class _NavItem extends StatelessWidget {
   final IconData ikon;
   final String label;
@@ -665,19 +703,21 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final warna = aktif ? AppColors.maroon : _navNonaktif;
+
     return InkWell(
       onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(ikon, size: 28, color: AppColors.maroon),
+          Icon(ikon, size: 28, color: warna),
           const SizedBox(height: 2),
           Text(
             label,
             style: TextStyle(
-              color: AppColors.maroon,
+              color: warna,
               fontSize: 12,
-              fontWeight: aktif ? FontWeight.w800 : FontWeight.w500,
+              fontWeight: aktif ? FontWeight.bold : FontWeight.normal,
             ),
           ),
         ],
