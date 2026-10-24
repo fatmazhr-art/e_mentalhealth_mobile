@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_storage.dart';
 import 'konselor_chat_screen.dart';
+import 'lupa_kata_sandi_screen.dart';
 
 class KonselorLoginScreen extends StatefulWidget {
   const KonselorLoginScreen({super.key});
@@ -193,7 +194,12 @@ class _KonselorLoginScreenState extends State<KonselorLoginScreen> {
                             alignment: Alignment.centerRight,
                             child: InkWell(
                               onTap: () {
-                                // TODO: halaman lupa kata sandi
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const LupaKataSandiScreen(),
+                                  ),
+                                );
                               },
                               child: Padding(
                                 padding:

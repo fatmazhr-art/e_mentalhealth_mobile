@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/auth_storage.dart';
 import 'konselor_chat_room_screen.dart';
-import 'konselor_login_screen.dart';
 import 'konselor_riwayat_tab.dart';
+import 'konselor_profil_tab.dart';
+import 'notifikasi_screen.dart';
 
 const _primary = Color(0xFF7B1E2B);
 const _textDark = Color(0xFF4A1420);
@@ -43,7 +43,7 @@ class _KonselorChatScreenState extends State<KonselorChatScreen> {
 
   // Data contoh. Nanti diganti data dari API Laravel.
   static const _konselorName = 'dr. Sarah V., Sp.KJ';
-  static const _isActive = true;
+  bool _isActive = true; // status bisa di-toggle
 
   static const _chats = [
     _ChatItem(
@@ -85,7 +85,7 @@ class _KonselorChatScreenState extends State<KonselorChatScreen> {
           children: [
             _buildChatTab(),
             const KonselorRiwayatTab(),
-            const _ProfilTab(),
+            const KonselorProfilTab(),
           ],
         ),
       ),
@@ -167,9 +167,12 @@ class _KonselorChatScreenState extends State<KonselorChatScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              _Badge(
-                text: _isActive ? 'Aktif' : 'Nonaktif',
-                bold: true,
+              GestureDetector(
+                onTap: () => setState(() => _isActive = !_isActive),
+                child: _Badge(
+                  text: _isActive ? 'Aktif' : 'Nonaktif',
+                  bold: true,
+                ),
               ),
             ],
           ),
@@ -338,7 +341,11 @@ class _BottomBar extends StatelessWidget {
 
   const _BottomBar({required this.index, required this.onChanged});
 
-  static const _labels = ['Chat', 'Riwayat', 'Profil'];
+  static const _items = [
+    (label: 'Chat',    icon: Icons.chat_bubble_outline_rounded,    iconActive: Icons.chat_bubble_rounded),
+    (label: 'Riwayat', icon: Icons.history_rounded,                iconActive: Icons.history_rounded),
+    (label: 'Profil',  icon: Icons.person_outline_rounded,         iconActive: Icons.person_rounded),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -350,23 +357,35 @@ class _BottomBar extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 56,
+          height: 64,
           child: Row(
             children: [
-              for (var i = 0; i < _labels.length; i++)
+              for (var i = 0; i < _items.length; i++)
                 Expanded(
                   child: InkWell(
                     onTap: () => onChanged(i),
-                    child: Center(
-                      child: Text(
-                        _labels[i],
-                        style: _t(
-                          13.5,
-                          weight:
-                          i == index ? FontWeight.w700 : FontWeight.w400,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          i == index
+                              ? _items[i].iconActive
+                              : _items[i].icon,
                           color: i == index ? _primary : _textMuted,
+                          size: 24,
                         ),
-                      ),
+                        const SizedBox(height: 3),
+                        Text(
+                          _items[i].label,
+                          style: _t(
+                            12,
+                            weight: i == index
+                                ? FontWeight.w700
+                                : FontWeight.w400,
+                            color: i == index ? _primary : _textMuted,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -377,39 +396,4 @@ class _BottomBar extends StatelessWidget {
     );
   }
 }
-
-/// Tab Profil sementara: hanya tombol Keluar supaya alur login bisa dites ulang.
-class _ProfilTab extends StatelessWidget {
-  const _ProfilTab();
-
-  Future<void> _logout(BuildContext context) async {
-    await AuthStorage.clear();
-    if (!context.mounted) return;
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const KonselorLoginScreen()),
-          (route) => false,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 200,
-        height: 48,
-        child: ElevatedButton(
-          onPressed: () => _logout(context),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _primary,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: const StadiumBorder(),
-          ),
-          child: Text('Keluar',
-              style: _t(15, weight: FontWeight.w600, color: Colors.white)),
-        ),
-      ),
-    );
-  }
-}
+
