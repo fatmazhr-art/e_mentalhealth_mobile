@@ -12,3 +12,4 @@ export 'screens/konselor_detail_riwayat_screen.dart';
 export 'screens/konselor_profil_tab.dart';
 export 'screens/ubah_profil_screen.dart';
 export 'screens/kelola_kata_sandi_screen.dart';
+export 'screens/notifikasi_screen.dart';

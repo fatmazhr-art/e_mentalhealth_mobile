@@ -112,7 +112,12 @@ class _KonselorChatScreenState extends State<KonselorChatScreen> {
                 alignment: Alignment.centerRight,
                 child: InkWell(
                   onTap: () {
-                    // TODO: halaman notifikasi
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const NotifikasiScreen(),
+                      ),
+                    );
                   },
                   customBorder: const CircleBorder(),
                   child: Container(

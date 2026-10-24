@@ -222,7 +222,21 @@ class _UbahProfilScreenState extends State<UbahProfilScreen> {
           child: ElevatedButton(
             onPressed: () {
               // TODO: simpan ke API Laravel
+              final messenger = ScaffoldMessenger.of(context);
               Navigator.pop(context);
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text('Profil berhasil diperbarui',
+                      style: GoogleFonts.poppins(
+                          fontSize: 13.5, color: Colors.white)),
+                  backgroundColor: const Color(0xFF7B1E2B),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: _primary,

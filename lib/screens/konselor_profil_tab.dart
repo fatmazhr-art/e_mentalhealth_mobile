@@ -28,6 +28,39 @@ class _KonselorProfilTabState extends State<KonselorProfilTab> {
   bool _notifAktif = true;
 
   Future<void> _logout() async {
+    final konfirmasi = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text('Keluar dari akun?',
+            style: _t(17, weight: FontWeight.w700)),
+        content: Text(
+          'Anda akan keluar dari sesi konselor ini. '
+          'Pastikan semua percakapan sudah selesai.',
+          style: _t(13.5, color: _textMuted),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('Batal',
+                style: _t(14, weight: FontWeight.w600, color: _textMuted)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _primary,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: const StadiumBorder(),
+            ),
+            child: Text('Keluar',
+                style: _t(14, weight: FontWeight.w600, color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (konfirmasi != true) return;
     await AuthStorage.clear();
     if (!mounted) return;
     Navigator.pushAndRemoveUntil(
