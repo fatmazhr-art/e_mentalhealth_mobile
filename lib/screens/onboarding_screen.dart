@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme.dart';
-import 'login_screen.dart';
+import 'konselor_login_screen.dart';
 
 // Background terang untuk onboarding 1 & 2.
 // Nanti bisa dipindah ke lib/theme.dart kalau mau dipakai di splash juga.
@@ -77,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        MaterialPageRoute(builder: (_) => const KonselorLoginScreen()),
       );
     }
   }

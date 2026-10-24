@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class KonselorLoginScreen extends StatefulWidget {
+  const KonselorLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<KonselorLoginScreen> createState() => _KonselorLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _KonselorLoginScreenState extends State<KonselorLoginScreen> {
   static const _primary = Color(0xFF7B1E2B);
   static const _textDark = Color(0xFF4A1420);
   static const _textMuted = Color(0xFF7A5A5F);
