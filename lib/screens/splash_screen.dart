@@ -3,6 +3,8 @@ import '../services/auth_storage.dart';
 import '../theme.dart';
 import 'konselor_chat_screen.dart';
 import 'konselor_login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'onboarding_screen.dart';
 
 // Background terang (sama dengan onboarding lama). Cocokkan hex dengan Figma.
 const Color _kBackgroundLight = Color(0xFFFBF7F4);
@@ -22,15 +24,30 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _goNext() async {
-    await Future.delayed(const Duration(seconds: 2)); // lama splash
-    final loggedIn = await AuthStorage.isLoggedIn();
+    final minDelay = Future.delayed(const Duration(seconds: 3));
+
+    bool loggedIn = false;
+    bool sudahOnboarding = false;
+    try {
+      loggedIn = await AuthStorage.isLoggedIn();
+      final prefs = await SharedPreferences.getInstance();
+      sudahOnboarding = prefs.getBool('sudahOnboarding') ?? false;
+    } catch (_) {}
+
+    await minDelay;
     if (!mounted) return;
 
+    final Widget tujuan;
+    if (!sudahOnboarding) {
+      tujuan = const OnboardingScreen();
+    } else if (loggedIn) {
+      tujuan = const KonselorChatScreen();
+    } else {
+      tujuan = const KonselorLoginScreen();
+    }
+
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) =>
-        loggedIn ? const KonselorChatScreen() : const KonselorLoginScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => tujuan),
     );
   }
 

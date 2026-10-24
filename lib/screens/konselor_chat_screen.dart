@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_storage.dart';
+import 'konselor_chat_room_screen.dart';
 import 'konselor_login_screen.dart';
+import 'konselor_riwayat_tab.dart';
 
 const _primary = Color(0xFF7B1E2B);
 const _textDark = Color(0xFF4A1420);
@@ -65,7 +67,12 @@ class _KonselorChatScreenState extends State<KonselorChatScreen> {
   ];
 
   void _openChat(_ChatItem chat) {
-    // TODO: pindah ke layar detail chat
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => KonselorChatRoomScreen(studentName: chat.name),
+      ),
+    );
   }
 
   @override
@@ -77,7 +84,7 @@ class _KonselorChatScreenState extends State<KonselorChatScreen> {
           index: _tab,
           children: [
             _buildChatTab(),
-            const _Placeholder('Riwayat'),
+            const KonselorRiwayatTab(),
             const _ProfilTab(),
           ],
         ),
@@ -403,19 +410,6 @@ class _ProfilTab extends StatelessWidget {
               style: _t(15, weight: FontWeight.w600, color: Colors.white)),
         ),
       ),
-    );
-  }
-}
-
-class _Placeholder extends StatelessWidget {
-  final String label;
-
-  const _Placeholder(this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Halaman $label', style: _t(16, color: _textMuted)),
     );
   }
 }
