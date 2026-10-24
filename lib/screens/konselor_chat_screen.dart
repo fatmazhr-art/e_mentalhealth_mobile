@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/auth_storage.dart';
+import 'konselor_login_screen.dart';
 
 const _primary = Color(0xFF7B1E2B);
 const _textDark = Color(0xFF4A1420);
@@ -27,18 +29,18 @@ class _ChatItem {
   });
 }
 
-class CounselorChatScreen extends StatefulWidget {
-  const CounselorChatScreen({super.key});
+class KonselorChatScreen extends StatefulWidget {
+  const KonselorChatScreen({super.key});
 
   @override
-  State<CounselorChatScreen> createState() => _CounselorChatScreenState();
+  State<KonselorChatScreen> createState() => _KonselorChatScreenState();
 }
 
-class _CounselorChatScreenState extends State<CounselorChatScreen> {
+class _KonselorChatScreenState extends State<KonselorChatScreen> {
   int _tab = 0;
 
   // Data contoh. Nanti diganti data dari API Laravel.
-  static const _counselorName = 'dr. Sarah V., Sp.KJ';
+  static const _konselorName = 'dr. Sarah V., Sp.KJ';
   static const _isActive = true;
 
   static const _chats = [
@@ -76,7 +78,7 @@ class _CounselorChatScreenState extends State<CounselorChatScreen> {
           children: [
             _buildChatTab(),
             const _Placeholder('Riwayat'),
-            const _Placeholder('Profil'),
+            const _ProfilTab(),
           ],
         ),
       ),
@@ -149,7 +151,7 @@ class _CounselorChatScreenState extends State<CounselorChatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Hi, $_counselorName',
+                    Text('Hi, $_konselorName',
                         style: _t(16, weight: FontWeight.w600)),
                     const SizedBox(height: 4),
                     Text('Jam operasional 08.00 – 16.00 WIB',
@@ -363,6 +365,42 @@ class _BottomBar extends StatelessWidget {
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tab Profil sementara: hanya tombol Keluar supaya alur login bisa dites ulang.
+class _ProfilTab extends StatelessWidget {
+  const _ProfilTab();
+
+  Future<void> _logout(BuildContext context) async {
+    await AuthStorage.clear();
+    if (!context.mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const KonselorLoginScreen()),
+          (route) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 200,
+        height: 48,
+        child: ElevatedButton(
+          onPressed: () => _logout(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _primary,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: const StadiumBorder(),
+          ),
+          child: Text('Keluar',
+              style: _t(15, weight: FontWeight.w600, color: Colors.white)),
         ),
       ),
     );

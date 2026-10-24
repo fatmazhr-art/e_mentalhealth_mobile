@@ -1,7 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import '../services/auth_storage.dart';
 import '../theme.dart';
-import 'onboarding_screen.dart';
+import 'konselor_chat_screen.dart';
+import 'konselor_login_screen.dart';
+
+// Background terang (sama dengan onboarding lama). Cocokkan hex dengan Figma.
+const Color _kBackgroundLight = Color(0xFFFBF7F4);
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,23 +15,23 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  Timer? _timer;
-
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(seconds: 3), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-      );
-    });
+    _goNext();
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  Future<void> _goNext() async {
+    await Future.delayed(const Duration(seconds: 2)); // lama splash
+    final loggedIn = await AuthStorage.isLoggedIn();
+    if (!mounted) return;
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) =>
+        loggedIn ? const KonselorChatScreen() : const KonselorLoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -35,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: _kBackgroundLight,
       body: Stack(
         children: [
           Positioned.fill(

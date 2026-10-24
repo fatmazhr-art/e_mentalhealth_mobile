@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/auth_storage.dart';
+import 'konselor_chat_screen.dart';
 
 class KonselorLoginScreen extends StatefulWidget {
   const KonselorLoginScreen({super.key});
@@ -13,7 +15,6 @@ class _KonselorLoginScreenState extends State<KonselorLoginScreen> {
   static const _textDark = Color(0xFF4A1420);
   static const _textMuted = Color(0xFF7A5A5F);
   static const _border = Color(0xFFEBD8CB);
-  static const _logoBg = Color(0xFFF1E3D5);
   static const _error = Color(0xFFB3261E);
 
   final _formKey = GlobalKey<FormState>();
@@ -76,7 +77,16 @@ class _KonselorLoginScreenState extends State<KonselorLoginScreen> {
     try {
       await Future.delayed(const Duration(seconds: 1));
 
+      // SEMENTARA: anggap login selalu berhasil.
+      // Ganti dengan panggilan API Laravel nanti, dan hapus token palsu ini.
+      await AuthStorage.saveToken('dummy-token');
 
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const KonselorChatScreen()),
+            (route) => false,
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -96,24 +106,15 @@ class _KonselorLoginScreenState extends State<KonselorLoginScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Logo
-                    Container(
-                      width: 180,
-                      height: 224,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: _logoBg,
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        width: 260,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, _, _) => const Icon(
-                          Icons.favorite,
-                          color: _primary,
-                          size: 120,
-                        ),
+                    // Logo (tanpa kotak background)
+                    Image.asset(
+                      'assets/images/logo.png',
+                      width: 260,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, _, _) => const Icon(
+                        Icons.favorite,
+                        color: _primary,
+                        size: 120,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -192,9 +193,11 @@ class _KonselorLoginScreenState extends State<KonselorLoginScreen> {
                             alignment: Alignment.centerRight,
                             child: InkWell(
                               onTap: () {
+                                // TODO: halaman lupa kata sandi
                               },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                padding:
+                                const EdgeInsets.symmetric(vertical: 4),
                                 child: Text(
                                   'Lupa kata sandi?',
                                   style: _t(13,
