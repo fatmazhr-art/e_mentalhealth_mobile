@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '0002_register_akun.dart';
+import '0004_reset_password.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -144,7 +145,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: () {
-                                // TODO: buka halaman F003 reset password
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ResetPasswordScreen(),
+                                  ),
+                                );
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: AppColors.maroon,

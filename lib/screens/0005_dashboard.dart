@@ -5,6 +5,7 @@ import '0006_assesmen.dart';
 import '0010_jadwal_konselor.dart';
 import '0012_mood_tracker.dart';
 import '0013_rehat.dart';
+import '0014_halaman_forum.dart';
 import '0015_riwayat_asesmen.dart';
 import '0016_kalender.dart';
 import '0017_chatbot.dart';
@@ -42,7 +43,11 @@ class _HomeMahasiswaScreenState extends State<HomeMahasiswaScreen> {
       'assets/images/menu_rehat.png',
       halaman: (context) => const RehatScreen(),
     ),
-    _MenuData('Forum Diskusi\nAnonim', 'assets/images/menu_forum.png'),
+    _MenuData(
+      'Forum Diskusi\nAnonim', 
+      'assets/images/menu_forum.png',
+      halaman: (context) => const  CommunityForumScreen(),
+    ),
     _MenuData(
       'Riwayat\nAsesmen',
       'assets/images/menu_riwayat.png',
