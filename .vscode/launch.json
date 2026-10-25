@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Curhatin - Mahasiswa",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Curhatin - Konselor",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_konselor.dart"
+    }
+  ]
+}
+

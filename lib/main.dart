@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-
-import 'screens/0001_on_boarding.dart';
 import 'theme/app_colors.dart';
+import 'screens/auth/0001_on_boarding.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CurhatinApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class CurhatinApp extends StatelessWidget {
+  const CurhatinApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Curhatin',
+      title: 'CURHATIN',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.maroon),
-        scaffoldBackgroundColor: AppColors.cream,
-        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFFCFAF8),
+        primaryColor: AppColors.maroon,
+        fontFamily: 'Poppins',
       ),
+      // Pintu masuk utama: Splash Screen -> Onboarding Screen -> Login
       home: const OnboardingScreen(),
     );
   }
