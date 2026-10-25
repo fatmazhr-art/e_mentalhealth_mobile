@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../screens/0003_login.dart';
 
 const Color _kartuPutih = Color(0xFFFFFFFF);
 const Color _kotakIkon = Color(0xFFFEEAE6);
@@ -40,7 +41,10 @@ class LogoutConfirmationDialog extends StatelessWidget {
     await onConfirm?.call();
 
     // Hapus semua halaman dari tumpukan, lalu buka Login.
-    navigator.pushNamedAndRemoveUntil('/login', (route) => false);
+    navigator.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (route) => false,
+    );
   }
 
   @override

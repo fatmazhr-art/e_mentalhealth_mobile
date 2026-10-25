@@ -98,7 +98,7 @@ class _ManagePasswordScreenState extends State<ManagePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kProfilLatar,
+      backgroundColor: Color(0xFFFCFAF8),
       body: SafeArea(
         child: Column(
           children: [

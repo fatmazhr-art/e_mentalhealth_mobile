@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import 'komponen_hasil.dart';
+import 'package:e_mentalhealth_mobile/models/hasil_asesmen.dart';
+import '0010_jadwal_konselor.dart';
 
 const Color _latar = Color(0xFFFCFAF8);
 const Color _teksGelap = Color(0xFF222222);
@@ -10,32 +12,14 @@ const Color _kartu = Color(0xFFFEF5EC);
 const Color _garis = Color(0xFFEBD9C6);
 
 class DetailHasilScreen extends StatelessWidget {
-  const DetailHasilScreen({super.key});
+  final HasilAsesmen hasil;
+  final VoidCallback? onChatKonselor;
 
-  // Data contoh. Ganti dengan hasil perhitungan / API nanti.
-  static const List<_MetrikData> _metrik = [
-    _MetrikData(
-      judul: 'Depresi',
-      skor: 8,
-      status: 'Normal',
-      deskripsi: 'Suasana hati Anda dalam keadaan baik. Tekanan perkuliahan, '
-          'tugas akhir, maupun magang masih terkelola dengan sangat baik.',
-    ),
-    _MetrikData(
-      judul: 'Kecemasan',
-      skor: 12,
-      status: 'Sedang',
-      deskripsi: 'Anda mengalami kecemasan sedang. Kekhawatiran terkait '
-          'prospek magang mulai memicu rasa gelisah.',
-    ),
-    _MetrikData(
-      judul: 'Stress',
-      skor: 15,
-      status: 'Sedang',
-      deskripsi: 'Anda berada pada tingkat stres sedang. Beban tugas harian, '
-          'bimbingan skripsi mulai membuat Anda merasa tertekan dan cepat lelah.',
-    ),
-  ];
+  const DetailHasilScreen({
+    super.key,
+    required this.hasil,
+    this.onChatKonselor,
+  });
 
   static const List<_RekomendasiData> _rekomendasi = [
     _RekomendasiData(
@@ -70,12 +54,26 @@ class DetailHasilScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          for (final m in _metrik) ...[
-                            _KartuMetrik(data: m),
+                          // Render 3 Subskala Dinamis (Depresi, Kecemasan, Stress)
+                          for (final s in hasil.subskala) ...[
+                            _KartuMetrik(
+                              data: _MetrikData(
+                                judul: s.nama,
+                                skor: s.skor,
+                                status: s.tingkat,
+                                deskripsi: s.deskripsi.isNotEmpty
+                                    ? s.deskripsi
+                                    : _getDeskripsiDefault(s.nama, s.tingkat),
+                              ),
+                            ),
                             const SizedBox(height: 14),
                           ],
                           const SizedBox(height: 4),
-                          const _KartuDeskripsi(),
+                          _KartuDeskripsi(
+                            deskripsi: hasil.deskripsiLengkap,
+                            isTinggi: hasil.isTinggi,
+                            onChatKonselor: onChatKonselor,
+                          ),
                           const SizedBox(height: 28),
                           const Text(
                             'Rekomendasi Rehat Untukmu',
@@ -89,7 +87,7 @@ class DetailHasilScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Daftar rekomendasi (bisa digeser ke samping)
+                    // Daftar rekomendasi horizontal
                     SizedBox(
                       height: 250,
                       child: ListView.separated(
@@ -111,9 +109,18 @@ class DetailHasilScreen extends StatelessWidget {
       ),
     );
   }
+
+  static String _getDeskripsiDefault(String nama, String tingkat) {
+    if (nama.toLowerCase() == 'depresi') {
+      return 'Suasana hati Anda dalam keadaan terkelola dengan baik. Tekanan perkuliahan dan aktivitas harian masih berada di batas normal.';
+    } else if (nama.toLowerCase() == 'kecemasan') {
+      return 'Anda merasakan ketakutan atau panik berlebih terkait tantangan aktivitas atau persaingan dunia kerja.';
+    }
+    return 'Beban akumulasi dari tugas akhir dan tekanan harian membuat Anda merasa berada di titik jenuh.';
+  }
 }
 
-// ---------------- Data ----------------
+// ---------------- Data Model Internal ----------------
 class _MetrikData {
   final String judul;
   final int skor;
@@ -195,9 +202,17 @@ class _KartuMetrik extends StatelessWidget {
   }
 }
 
-// ---------------- Kartu deskripsi rangkuman ----------------
+// ---------------- Kartu deskripsi rangkuman + Tombol Chat Konselor ----------------
 class _KartuDeskripsi extends StatelessWidget {
-  const _KartuDeskripsi();
+  final String deskripsi;
+  final bool isTinggi;
+  final VoidCallback? onChatKonselor;
+
+  const _KartuDeskripsi({
+    required this.deskripsi,
+    required this.isTinggi,
+    this.onChatKonselor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -209,10 +224,10 @@ class _KartuDeskripsi extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.maroon.withAlpha(70)),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Deskripsi',
             style: TextStyle(
               color: _teksGelap,
@@ -220,13 +235,52 @@ class _KartuDeskripsi extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'Kamu sedang mengalami tingkat kecemasan dan stres sedang. '
-            'Ini wajar terjadi saat menghadapi tekanan magang dan tugas '
-            'akhir bersamaan.',
-            style: TextStyle(color: _teksAbu, fontSize: 13, height: 1.5),
+            deskripsi,
+            style: const TextStyle(color: _teksAbu, fontSize: 13, height: 1.5),
           ),
+
+          // Jika Status Tinggi/Berat/Perlu Pendamping -> Tampilkan Tombol Chat Konselor
+          if (isTinggi) ...[
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton.icon(
+                onPressed: onChatKonselor ??
+                    () {
+                      Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const JadwalKonselorScreen(), // Ganti dengan nama Class Layar Jadwal kamu
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.chat_bubble_outline_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                label: const Text(
+                  'Chat dengan Konselor',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14.5,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.maroon,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -259,9 +313,7 @@ class _KartuRekomendasi extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            // TODO: buka halaman Rehat sesuai rekomendasi
-          },
+          onTap: () {},
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

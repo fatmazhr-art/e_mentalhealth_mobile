@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 
 import '../theme/app_colors.dart';
 
@@ -116,19 +117,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       ),
       child: Row(
         children: [
-          Material(
-            color: AppColors.maroon,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Navigator.maybePop(context),
-              child: const SizedBox(
-                width: 40,
-                height: 40,
-                child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-              ),
-            ),
-          ),
+          const CircleBackButton(),
           const SizedBox(width: 14),
           Expanded(
             child: Text(

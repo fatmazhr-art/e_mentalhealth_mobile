@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
-import '0008_hasil_asesmen.dart';
+import '0008(1)_hasil_asesmen_anonim.dart';
+import '0008(2)_hasil_asesmen_detail.dart';
+import 'package:e_mentalhealth_mobile/models/hasil_asesmen.dart';
 
 const Color _latar = Color(0xFFFCFAF8);
 const Color _teksGelap = Color(0xFF1A1A1A);
@@ -9,7 +11,15 @@ const Color _kartu = Color(0xFFFEF5EC);
 const Color _garis = Color(0xFFEBD9C6);
 
 class SoalPenyebabScreen extends StatefulWidget {
-  const SoalPenyebabScreen({super.key});
+  /// Parameter penanda status autentikasi.
+  /// Set [isAnonim = true] jika diakses oleh Tamu/Guest.
+  /// Set [isAnonim = false] jika diakses oleh Pengguna yang sudah Login.
+  final bool isAnonim;
+
+  const SoalPenyebabScreen({
+    super.key,
+    this.isAnonim = false,
+  });
 
   @override
   State<SoalPenyebabScreen> createState() => _SoalPenyebabScreenState();
@@ -18,7 +28,6 @@ class SoalPenyebabScreen extends StatefulWidget {
 class _SoalPenyebabScreenState extends State<SoalPenyebabScreen> {
   static const int _maksKarakter = 200;
 
-  // Data contoh. Ganti dengan data dari API nanti.
   static const List<String> _penyebab = [
     'Tugas Akhir',
     'Magang',
@@ -122,7 +131,7 @@ class _SoalPenyebabScreenState extends State<SoalPenyebabScreen> {
               child: const SizedBox(
                 width: 40,
                 height: 40,
-                child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
+                child: Icon(Icons.arrow_back, color: Colors.white),
               ),
             ),
           ),
@@ -264,12 +273,33 @@ class _SoalPenyebabScreenState extends State<SoalPenyebabScreen> {
               height: 52,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HasilAsesmenScreen(),
-                    ),
+                  // Data dummy sampel hasil kuis DASS-21
+                  final dataHasil = HasilAsesmen.contoh(
+                    nama: 'John Doe',
+                    nim: '123456789',
+                    prodi: 'Teknik Informatika',
                   );
+
+                  // Routing otomatis berdasarkan status anonim
+                  if (widget.isAnonim) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HasilAsesmenAnonimScreen(
+                          hasil: dataHasil,
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HasilAsesmenDetailScreen(
+                          hasil: dataHasil,
+                        ),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.maroon,
@@ -292,7 +322,6 @@ class _SoalPenyebabScreenState extends State<SoalPenyebabScreen> {
   }
 }
 
-// ---------------- Chip pilihan (terpilih = maroon) ----------------
 class _ChipPilihan extends StatelessWidget {
   final String label;
   final bool aktif;

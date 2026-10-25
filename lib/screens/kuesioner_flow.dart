@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// ============================================================================
@@ -131,19 +132,7 @@ class _AsesmenOnlineScreenState extends State<AsesmenOnlineScreen> {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: InkWell(
-            onTap: () => Navigator.of(context).maybePop(),
-            borderRadius: BorderRadius.circular(30),
-            child: Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: CurhatinTheme.primaryMaroon, width: 2),
-              ),
-              child: const Icon(Icons.arrow_back, color: CurhatinTheme.primaryMaroon, size: 20),
-            ),
-          ),
+          child: const CircleBackButton(),
         ),
         const SizedBox(height: 8),
         Image.asset(
@@ -660,19 +649,7 @@ class _SoalPenyebabScreenState extends State<SoalPenyebabScreen> {
           constraints: const BoxConstraints(maxWidth: 500),
           child: Row(
             children: [
-              InkWell(
-                onTap: () => Navigator.maybePop(context),
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  width: 38,
-                  height: 38,
-                  decoration: const BoxDecoration(
-                    color: CurhatinTheme.primaryMaroon,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-                ),
-              ),
+              const CircleBackButton(),
               const SizedBox(width: 14),
               Text(
                 'Soal Penyebab',

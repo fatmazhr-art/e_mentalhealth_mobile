@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 
 import '../theme/app_colors.dart';
 
@@ -131,19 +132,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Row(
         children: [
-          Material(
-            color: AppColors.maroon,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Navigator.maybePop(context),
-              child: const SizedBox(
-                width: 40,
-                height: 40,
-                child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-              ),
-            ),
-          ),
+          const CircleBackButton(),
           const Expanded(
             child: Text(
               'Mood Tracker & Jurnal',

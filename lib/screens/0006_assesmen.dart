@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 
 import '../theme/app_colors.dart';
+import '../widgets/circle_icon_button.dart';
 import '0007_soal_penyebab.dart';
 
 const Color _latar = Color(0xFFFCFAF8);
@@ -68,7 +70,7 @@ class _AsesmenScreenState extends State<AsesmenScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const _TombolKembali(),
+                    const CircleBackButton(),
                     const SizedBox(height: 8),
                     _header(),
                     const SizedBox(height: 28),
@@ -269,23 +271,8 @@ class _AsesmenScreenState extends State<AsesmenScreen> {
 // ---------------- Tombol kembali bulat ----------------
 class _TombolKembali extends StatelessWidget {
   const _TombolKembali();
-
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.maroon,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: () => Navigator.maybePop(context),
-        child: const SizedBox(
-          width: 40,
-          height: 40,
-          child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const CircleBackButton();
 }
 
 // ---------------- Judul seksi ----------------

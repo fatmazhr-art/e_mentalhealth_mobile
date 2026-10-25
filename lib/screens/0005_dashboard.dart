@@ -6,11 +6,11 @@ import '0010_jadwal_konselor.dart';
 import '0012_mood_tracker.dart';
 import '0013_rehat.dart';
 import '0014_halaman_forum.dart';
-import '0015_riwayat_asesmen.dart';
-import '0016_kalender.dart';
-import '0017_chatbot.dart';
-import '0018_notifikasi.dart';
-import '0020_profil.dart';
+import '0017_riwayat_asesmen.dart';
+import '0018_kalender.dart';
+import '0019_chatbot.dart';
+import '0020_notifikasi.dart';
+import '0021_profil.dart';
 
 const Color _latar = Color(0xFFFCFAF8);
 const Color _teksGelap = Color(0xFF1A1A1A);

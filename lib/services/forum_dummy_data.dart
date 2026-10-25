@@ -1,4 +1,5 @@
 import 'package:e_mentalhealth_mobile/models/thread_post.dart';
+import 'package:e_mentalhealth_mobile/models/comment.dart';
 
 // Data sementara (palsu). Nanti diganti pemanggilan API Laravel.
 
@@ -36,5 +37,33 @@ List<ThreadPost> dummyThreads() => [
         tags: ['Tips', 'Karier'],
         likes: 120,
         comments: 9,
+      ),
+    ];
+
+/// Komentar contoh (urutan sudah sesuai tampilan: komentar utama, lalu balasannya).
+List<Comment> dummyComments() => [
+      Comment(
+        id: 'c1',
+        alias: 'Teh Manis',
+        timeAgo: '15 menit lalu',
+        text:
+            'Semangat ya! Minggu pertama memang paling berat. Pelan-pelan aja, nggak ada yang langsung ngerti semuanya kok.',
+        likes: 12,
+      ),
+      Comment(
+        id: 'c2',
+        parentId: 'c1',
+        alias: 'Kopi Hangat',
+        timeAgo: '12 menit lalu',
+        text: 'Makasih banyak, jadi lebih tenang bacanya.',
+        likes: 4,
+      ),
+      Comment(
+        id: 'c3',
+        alias: 'Awan Sore',
+        timeAgo: '10 menit lalu',
+        text:
+            'Coba catat hal yang belum dimengerti, lalu tanyakan ke mentor di akhir hari.',
+        likes: 7,
       ),
     ];

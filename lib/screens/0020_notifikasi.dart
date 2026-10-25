@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 
 import '../theme/app_colors.dart';
 import '0012_mood_tracker.dart';
-import '0016_kalender.dart';
-import '0017_chatbot.dart';
-import '0020_profil.dart';
+import '0018_kalender.dart';
+import '0019_chatbot.dart';
+import '0021_profil.dart';
 
 const Color _headerBg = Color(0xFFFFFBF5);
 const Color _bodyBg = Color(0xFFFFFFFF);
@@ -295,19 +296,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       padding: const EdgeInsets.fromLTRB(20, 16, 12, 12),
       child: Row(
         children: [
-          Material(
-            color: AppColors.maroon,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Navigator.maybePop(context),
-              child: const SizedBox(
-                width: 40,
-                height: 40,
-                child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-              ),
-            ),
-          ),
+          const CircleBackButton(),
           const Expanded(
             child: Text(
               'Notifikasi',

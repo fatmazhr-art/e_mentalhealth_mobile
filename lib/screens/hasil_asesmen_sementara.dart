@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:e_mentalhealth_mobile/theme/app_colors.dart';
 
@@ -24,6 +25,7 @@ class HasilAsesmenSementara extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        leading: const CircleBackButton(),
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.maroon,
         elevation: 0,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
+import 'package:e_mentalhealth_mobile/models/hasil_asesmen.dart';
 
 import '../theme/app_colors.dart';
 // Sesuaikan dengan file yang berisi HasilAsesmenScreen di proyekmu.
-import '0008_hasil_asesmen.dart';
+import '0008(2)_hasil_asesmen_detail.dart';
 
 const Color _headerBg = Color(0xFFFFFBF5);
 const Color _bodyBg = Color(0xFFFFFFFF);
@@ -103,10 +105,18 @@ class _RiwayatAsesmenScreenState extends State<RiwayatAsesmenScreen> {
   }
 
   void _bukaDetail(AssessmentHistory item) {
-    // TODO: kirim item.id ke HasilAsesmenScreen jika konstruktornya menerima parameter.
+    // TODO: nanti ambil hasil asli berdasarkan item.id
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const HasilAsesmenScreen()),
+      MaterialPageRoute(
+        builder: (context) => HasilAsesmenDetailScreen(
+          hasil: HasilAsesmen.contoh(
+            nama: 'John Doe',
+            nim: '123456789',
+            prodi: 'Teknik Informatika',
+          ),
+        ),
+      ),
     );
   }
 
@@ -171,19 +181,7 @@ class _RiwayatAsesmenScreenState extends State<RiwayatAsesmenScreen> {
       padding: const EdgeInsets.fromLTRB(20, 16, 12, 12),
       child: Row(
         children: [
-          Material(
-            color: AppColors.maroon,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Navigator.maybePop(context),
-              child: const SizedBox(
-                width: 40,
-                height: 40,
-                child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-              ),
-            ),
-          ),
+          const CircleBackButton(),
           const Expanded(
             child: Text(
               'Riwayat Asesmen',

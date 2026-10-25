@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
-import '0016_kalender.dart';
-import '0017_chatbot.dart';
-import '0018_notifikasi.dart';
-import '0021_ubah_profil.dart';
-import '0022_kelola_kata_sandi.dart';
+import '0018_kalender.dart';
+import '0019_chatbot.dart';
+import '0020_notifikasi.dart';
+import '0022_ubah_profil.dart';
+import '0023_kelola_kata_sandi.dart';
 import 'komponen_logout.dart';
 import 'komponen_profil.dart';
 
@@ -20,20 +20,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Halaman ini adalah tab Profile, jadi tab aktif selalu 3.
   final int _tabAktif = 3;
 
-  // Data contoh. TODO: ganti dengan data dari API / sesi login.
-  ProfilData _data = const ProfilData(
-    nama: 'Natasha Romanoff',
-    nim: '20190106',
-    email: 'natsblackwidow@gmail.com',
-    noHp: '0819-2008-1167',
-  );
+  // Map _data disimpan sebagai state utama agar dapat diakses di _kartuInfo()
+  // dan di-update secara dinamis setelah kembali dari EditProfileScreen.
+  Map<String, dynamic> _data = {
+    'nama': 'Natasha Romanoff',
+    'fullName': 'Natasha Romanoff',
+    'nim': '20190106',
+    'forumAlias': 'Kucing Tenang',
+    'email': 'natsblackwidow@gmail.com',
+    'noHp': '0819-2008-1167',
+  };
 
   Future<void> _ubahProfil() async {
-    final hasil = await Navigator.push<ProfilData>(
+    // 1. Kirim Map _data lewat parameter 'data'
+    final hasil = await Navigator.push<Map<String, dynamic>>(
       context,
-      MaterialPageRoute(builder: (context) => EditProfileScreen(data: _data)),
+      MaterialPageRoute(
+        builder: (context) => EditProfileScreen(data: _data),
+      ),
     );
-    if (hasil != null && mounted) setState(() => _data = hasil);
+
+    // 2. Jika ada perubahan data dari layar Ubah Profil, perbarui state profil
+    if (hasil != null && mounted) {
+      setState(() {
+        _data = {
+          ..._data,
+          ...hasil,
+          // Mengatur nama tampilan kartu info jika ada perubahan fullName
+          'nama': hasil['fullName'] ?? hasil['nama'] ?? _data['nama'],
+        };
+      });
+    }
   }
 
   void _kelolaKataSandi() {
@@ -55,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kProfilLatar,
+      backgroundColor: Color(0xFFFCFAF8),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 120),
         child: Column(
@@ -192,6 +209,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // ---------------- Kartu nama & NIM ----------------
   Widget _kartuInfo() {
+    final namaTampil = (_data['nama'] ?? _data['fullName'] ?? '').toString();
+    final nimTampil = (_data['nim'] ?? '').toString();
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
@@ -203,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           Text(
-            _data.nama.toUpperCase(),
+            namaTampil.toUpperCase(),
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: kProfilTeksGelap,
@@ -214,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'NIM. ${_data.nim}',
+            'NIM. $nimTampil',
             style: const TextStyle(color: kProfilTeksAbu, fontSize: 13.5),
           ),
         ],

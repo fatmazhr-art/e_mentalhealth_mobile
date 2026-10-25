@@ -167,7 +167,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               child: const SizedBox(
                 width: 40,
                 height: 40,
-                child: Icon(Icons.close, color: Colors.white, size: 22),
+                child: Icon(Icons.close),
               ),
             ),
           ),

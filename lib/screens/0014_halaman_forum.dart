@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 import 'package:e_mentalhealth_mobile/theme/app_colors.dart';
 import 'package:e_mentalhealth_mobile/models/thread_post.dart';
 import 'package:e_mentalhealth_mobile/services/forum_dummy_data.dart';
 import 'package:e_mentalhealth_mobile/widgets/circle_icon_button.dart';
 import 'package:e_mentalhealth_mobile/widgets/lock_banner.dart';
 import 'package:e_mentalhealth_mobile/widgets/thread_card.dart';
-import 'package:e_mentalhealth_mobile/screens/0023_buat_utasan.dart';
+import 'package:e_mentalhealth_mobile/screens/0015_buat_utasan.dart';
+import 'package:e_mentalhealth_mobile/screens/0016_detail_utasan.dart';
 
 class CommunityForumScreen extends StatefulWidget {
   const CommunityForumScreen({super.key});
@@ -63,7 +65,18 @@ class _CommunityForumScreenState extends State<CommunityForumScreen> {
             final p = posts[i - 1];
             return Padding(
               padding: const EdgeInsets.only(bottom: 14),
-              child: ThreadCard(post: p, onLike: () => _toggleLike(p)),
+              child: ThreadCard(
+                post: p,
+                onLike: () => _toggleLike(p),
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ThreadDetailScreen(post: p)),
+                  );
+                  setState(() {}); // segarkan jumlah dukungan
+                },
+              ),
             );
           },
         ),
@@ -81,10 +94,7 @@ class _CommunityForumScreenState extends State<CommunityForumScreen> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: CircleIconButton(
-                icon: Icons.arrow_back,
-                onTap: () => Navigator.maybePop(context),
-              ),
+              child: const CircleBackButton(),
             ),
             const Text('Komunitas',
                 style: TextStyle(

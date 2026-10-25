@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import '../widgets/circle_back_button.dart';
 
 import '../theme/app_colors.dart';
 import '0012_mood_tracker.dart';
-import '0017_chatbot.dart';
-import '0018_notifikasi.dart';
+import '0019_chatbot.dart';
+import '0020_notifikasi.dart';
 import 'mood_detail_bottom_sheet.dart'; 
-import '0020_profil.dart';// sesuaikan dengan nama file bottom sheet-mu
+import '0021_profil.dart';// sesuaikan dengan nama file bottom sheet-mu
 
 const Color _latar = Color(0xFFFCFAF8);
 const Color _teksGelap = Color(0xFF222222);
@@ -243,19 +244,7 @@ class _CalendarMoodTrackerScreenState extends State<CalendarMoodTrackerScreen> {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Row(
         children: [
-          Material(
-            color: AppColors.maroon,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Navigator.maybePop(context),
-              child: const SizedBox(
-                width: 40,
-                height: 40,
-                child: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-              ),
-            ),
-          ),
+          const CircleBackButton(),
           const Expanded(
             child: Text(
               'Kalender',

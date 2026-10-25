@@ -7,11 +7,15 @@ import 'package:e_mentalhealth_mobile/widgets/tag_label.dart';
 class ThreadCard extends StatelessWidget {
   final ThreadPost post;
   final VoidCallback onLike;
-  const ThreadCard({required this.post, required this.onLike});
+  final VoidCallback? onTap; // dibuka saat kartu diketuk
+  const ThreadCard({required this.post, required this.onLike, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -85,6 +89,7 @@ class ThreadCard extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
