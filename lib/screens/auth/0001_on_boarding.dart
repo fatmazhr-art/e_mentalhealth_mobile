@@ -68,7 +68,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void initState() {
     super.initState();
     // Splash tampil 3 detik, lalu berganti ke onboarding
-    _timer = Timer(const Duration(seconds: 3), () {
+    _timer = Timer(const Duration(seconds: 5), () {
       if (!mounted) return;
       setState(() => _tampilSplash = false);
     });
