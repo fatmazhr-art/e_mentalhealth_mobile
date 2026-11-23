@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_storage.dart';
-import 'konselor_chat_screen.dart';
+import 'konselor/konselor_chat_screen.dart';
 import 'lupa_kata_sandi_screen.dart';
 
 class KonselorLoginScreen extends StatefulWidget {

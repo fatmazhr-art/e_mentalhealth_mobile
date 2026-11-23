@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/auth_storage.dart';
-import 'konselor_login_screen.dart';
-import 'ubah_profil_screen.dart';
-import 'kelola_kata_sandi_screen.dart';
+import '../../services/auth_storage.dart';
+import '../konselor_login_screen.dart';
+import '../ubah_profil_screen.dart';
+import '../kelola_kata_sandi_screen.dart';
+import 'notifikasi_jam_operasional_screen.dart';
 
 const _primary = Color(0xFF7B1E2B);
 const _textDark = Color(0xFF4A1420);
 const _textMuted = Color(0xFF7A5A5F);
 const _beige = Color(0xFFF1E3D5);
-const _badgeBg = Color(0xFFFFD9D9);
 const _shadow = Color(0x14000000);
 
 TextStyle _t(double size,
@@ -25,38 +25,76 @@ class KonselorProfilTab extends StatefulWidget {
 }
 
 class _KonselorProfilTabState extends State<KonselorProfilTab> {
-  bool _notifAktif = true;
 
   Future<void> _logout() async {
     final konfirmasi = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Keluar dari akun?',
-            style: _t(17, weight: FontWeight.w700)),
-        content: Text(
-          'Anda akan keluar dari sesi konselor ini. '
-          'Pastikan semua percakapan sudah selesai.',
-          style: _t(13.5, color: _textMuted),
+      barrierColor: const Color(0xFF7A5A5F).withValues(alpha: 0.55),
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: const BoxDecoration(
+                  color: _beige,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.logout_rounded,
+                    color: _primary, size: 30),
+              ),
+              const SizedBox(height: 20),
+              Text('Yakin ingin keluar?',
+                  textAlign: TextAlign.center,
+                  style: _t(17, weight: FontWeight.w700, color: _primary)),
+              const SizedBox(height: 10),
+              Text(
+                'Kamu akan keluar dari akun konselor. Chat yang belum selesai tetap tersimpan.',
+                textAlign: TextAlign.center,
+                style: _t(13.5, color: _textMuted),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(ctx, true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text('Ya, Keluar',
+                      style: _t(15,
+                          weight: FontWeight.w600, color: Colors.white)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _beige,
+                    foregroundColor: _primary,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text('Batal',
+                      style: _t(15,
+                          weight: FontWeight.w600, color: _primary)),
+                ),
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Batal',
-                style: _t(14, weight: FontWeight.w600, color: _textMuted)),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _primary,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: const StadiumBorder(),
-            ),
-            child: Text('Keluar',
-                style: _t(14, weight: FontWeight.w600, color: Colors.white)),
-          ),
-        ],
       ),
     );
 
@@ -195,19 +233,14 @@ class _KonselorProfilTabState extends State<KonselorProfilTab> {
           const _Divider(),
           _MenuItem(
             label: 'Notifikasi Jam Operasional',
-            trailing: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: _badgeBg,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                _notifAktif ? 'Aktif' : 'Nonaktif',
-                style: _t(12.5, weight: FontWeight.w500, color: _primary),
+            trailing:
+                const Icon(Icons.chevron_right_rounded, color: _primary, size: 24),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const NotifikasiJamOperasionalScreen(),
               ),
             ),
-            onTap: () => setState(() => _notifAktif = !_notifAktif),
           ),
           const _Divider(),
           _MenuItem(

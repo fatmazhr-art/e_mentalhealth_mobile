@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'konselor_chat_widgets.dart';
+import 'konselor/konselor_chat_widgets.dart';
 
 // Warna
 const _primary = Color(0xFF7B1E2B);

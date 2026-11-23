@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_storage.dart';
 import '../theme.dart';
-import 'konselor_chat_screen.dart';
+import 'konselor/konselor_chat_screen.dart';
 import 'konselor_login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'onboarding_screen.dart';

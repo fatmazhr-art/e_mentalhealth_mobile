@@ -17,15 +17,17 @@ class _NotifItem {
   final String title;
   final String body;
   final String time;
-  final bool isNew;
+  final bool isUnread;
   final IconData icon;
+  final String dayGroup; // 'Hari Ini' atau 'Kemarin'
 
   const _NotifItem({
     required this.title,
     required this.body,
     required this.time,
-    this.isNew = false,
+    this.isUnread = false,
     required this.icon,
+    required this.dayGroup,
   });
 }
 
@@ -40,46 +42,50 @@ class _NotifikasiScreenState extends State<NotifikasiScreen> {
   // Data contoh. Nanti diganti dari API Laravel.
   final List<_NotifItem> _notifications = [
     const _NotifItem(
-      title: 'Pesan baru dari Mahasiswa',
-      body: 'Mahasiswa Anonim #2456 mengirim pesan baru untuk Anda.',
-      time: '10.22',
-      isNew: true,
-      icon: Icons.chat_bubble_outline_rounded,
-    ),
-    const _NotifItem(
-      title: 'Pesan baru dari Mahasiswa',
-      body: 'Mahasiswa Anonim #104 mengirim pesan baru untuk Anda.',
-      time: '10.15',
-      isNew: true,
-      icon: Icons.chat_bubble_outline_rounded,
-    ),
-    const _NotifItem(
-      title: 'Pengingat Jam Operasional',
+      title: 'Jam operasional dimulai',
       body: 'Jam operasional dimulai pukul 08.00 WIB. Pastikan status Anda aktif.',
-      time: '08.00',
-      isNew: false,
+      time: '07.45',
+      isUnread: false,
       icon: Icons.access_time_rounded,
+      dayGroup: 'Hari Ini',
     ),
     const _NotifItem(
-      title: 'Sesi konseling selesai',
-      body: 'Sesi dengan Mahasiswa Anonim #088 telah selesai dan disimpan ke riwayat.',
-      time: 'Kemarin',
-      isNew: false,
-      icon: Icons.check_circle_outline_rounded,
+      title: 'Chat baru masuk',
+      body: 'Mahasiswa Anonim #2456 mengirim 1 pesan baru.',
+      time: '10.22',
+      isUnread: true,
+      icon: Icons.chat_bubble_outline_rounded,
+      dayGroup: 'Hari Ini',
     ),
     const _NotifItem(
-      title: 'Pengingat Jam Operasional',
-      body: 'Jam operasional akan berakhir pukul 16.00 WIB.',
-      time: 'Kemarin',
-      isNew: false,
+      title: 'Chat baru masuk',
+      body: 'Mahasiswa Anonim #104 mengirim 2 pesan baru.',
+      time: '10.15',
+      isUnread: true,
+      icon: Icons.chat_bubble_outline_rounded,
+      dayGroup: 'Hari Ini',
+    ),
+    const _NotifItem(
+      title: 'Jam operasional berakhir',
+      body: 'Jam operasional berakhir pukul 16.00 WIB. Sampai jumpa besok.',
+      time: '16.00',
+      isUnread: false,
       icon: Icons.access_time_rounded,
+      dayGroup: 'Kemarin',
+    ),
+    const _NotifItem(
+      title: 'Jam operasional dimulai',
+      body: 'Jam operasional dimulai pukul 08.00 WIB. Pastikan status Anda aktif.',
+      time: '07.45',
+      isUnread: false,
+      icon: Icons.access_time_rounded,
+      dayGroup: 'Kemarin',
     ),
   ];
 
   void _tandaiSemuaDibaca() {
-    // TODO: tandai semua dibaca via API
     setState(() {
-      // Simulasi semua sudah dibaca
+      // Simulasi semua sudah dibaca — di production update via API
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -94,8 +100,17 @@ class _NotifikasiScreenState extends State<NotifikasiScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final newNotifs = _notifications.where((n) => n.isNew).toList();
-    final oldNotifs = _notifications.where((n) => !n.isNew).toList();
+    // Kelompokkan per dayGroup
+    final groups = <String, List<_NotifItem>>{};
+    for (final n in _notifications) {
+      groups.putIfAbsent(n.dayGroup, () => []).add(n);
+    }
+    // Urutan: Hari Ini dulu, lalu Kemarin
+    final groupOrder = groups.keys.toList()
+      ..sort((a, b) {
+        const order = ['Hari Ini', 'Kemarin'];
+        return order.indexOf(a).compareTo(order.indexOf(b));
+      });
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -109,22 +124,17 @@ class _NotifikasiScreenState extends State<NotifikasiScreen> {
                   : ListView(
                       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                       children: [
-                        if (newNotifs.isNotEmpty) ...[
-                          _sectionLabel('Baru'),
+                        for (final group in groupOrder) ...[
+                          Text(group,
+                              style: _t(13.5,
+                                  weight: FontWeight.w700,
+                                  color: _textMuted)),
                           const SizedBox(height: 10),
-                          for (final n in newNotifs) ...[
+                          for (final n in groups[group]!) ...[
                             _NotifCard(item: n),
                             const SizedBox(height: 10),
                           ],
                           const SizedBox(height: 6),
-                        ],
-                        if (oldNotifs.isNotEmpty) ...[
-                          _sectionLabel('Sebelumnya'),
-                          const SizedBox(height: 10),
-                          for (final n in oldNotifs) ...[
-                            _NotifCard(item: n),
-                            const SizedBox(height: 10),
-                          ],
                         ],
                       ],
                     ),
@@ -157,20 +167,18 @@ class _NotifikasiScreenState extends State<NotifikasiScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text('Notifikasi',
+                textAlign: TextAlign.center,
                 style: _t(18, weight: FontWeight.w700, color: Colors.black)),
           ),
           TextButton(
             onPressed: _tandaiSemuaDibaca,
-            child: Text('Tandai semua',
-                style: _t(13, weight: FontWeight.w600, color: _primary)),
+            child: Text('Tandai semua dibaca',
+                style: _t(12, weight: FontWeight.w600, color: _primary)),
           ),
         ],
       ),
     );
   }
-
-  Widget _sectionLabel(String label) => Text(label,
-      style: _t(14, weight: FontWeight.w700, color: _textMuted));
 
   // ── Empty state ───────────────────────────────────────────────────────────
 
@@ -182,7 +190,7 @@ class _NotifikasiScreenState extends State<NotifikasiScreen> {
           Container(
             width: 88,
             height: 88,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: _beige,
               shape: BoxShape.circle,
             ),
@@ -212,10 +220,10 @@ class _NotifCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: item.isNew ? const Color(0xFFFFF4F4) : Colors.white,
+        color: item.isUnread ? const Color(0xFFFFF4F4) : Colors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: item.isNew
+          color: item.isUnread
               ? const Color(0xFF7B1E2B).withValues(alpha: 0.25)
               : const Color(0xFFEBD8CB),
         ),
@@ -228,47 +236,54 @@ class _NotifCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Icon bulat
             Container(
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: item.isNew ? _badgeBg : _beige,
+                color: item.isUnread ? _badgeBg : _beige,
                 shape: BoxShape.circle,
               ),
               child: Icon(item.icon, color: _primary, size: 22),
             ),
             const SizedBox(width: 12),
+            // Konten
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(item.title,
                             style: _t(14,
-                                weight: item.isNew
+                                weight: item.isUnread
                                     ? FontWeight.w700
                                     : FontWeight.w600)),
                       ),
-                      if (item.isNew)
+                      const SizedBox(width: 6),
+                      Text(item.time,
+                          style: _t(11.5,
+                              color: _textMuted.withValues(alpha: 0.8))),
+                      if (item.isUnread) ...[
+                        const SizedBox(width: 6),
                         Container(
-                          width: 9,
-                          height: 9,
+                          width: 8,
+                          height: 8,
                           decoration: const BoxDecoration(
                             color: _primary,
                             shape: BoxShape.circle,
                           ),
                         ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(item.body,
-                      style: _t(12.5, color: _textMuted), maxLines: 2,
+                      style: _t(12.5, color: _textMuted),
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 6),
-                  Text(item.time,
-                      style: _t(11.5, color: _textMuted.withValues(alpha: 0.7))),
                 ],
               ),
             ),

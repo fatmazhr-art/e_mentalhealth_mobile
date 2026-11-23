@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'konselor_chat_widgets.dart';
+import 'konselor/konselor_chat_widgets.dart';
 
 // Warna
 const _primary = Color(0xFF7B1E2B);
@@ -33,6 +33,146 @@ class _UbahProfilScreenState extends State<UbahProfilScreen> {
     _hpC.dispose();
     _sipC.dispose();
     super.dispose();
+  }
+
+  // ── Dialog sukses simpan ─────────────────────────────────────────────────
+
+  Future<void> _simpan() async {
+    // TODO: simpan ke API Laravel
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: const Color(0xFF7A5A5F).withValues(alpha: 0.55),
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: const BoxDecoration(
+                  color: _primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_rounded,
+                    color: Colors.white, size: 36),
+              ),
+              const SizedBox(height: 20),
+              Text('Perubahan berhasil disimpan',
+                  textAlign: TextAlign.center,
+                  style: _t(17, weight: FontWeight.w700, color: _primary)),
+              const SizedBox(height: 10),
+              Text(
+                'Data kamu sudah diperbarui.',
+                textAlign: TextAlign.center,
+                style: _t(13.5, color: _textMuted),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // tutup dialog
+                    Navigator.pop(context); // kembali ke profil
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text('Oke',
+                      style: _t(15,
+                          weight: FontWeight.w600, color: Colors.white)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Dialog konfirmasi batal ───────────────────────────────────────────────
+
+  Future<void> _konfirmasiBatal() async {
+    final yakin = await showDialog<bool>(
+      context: context,
+      barrierColor: const Color(0xFF7A5A5F).withValues(alpha: 0.55),
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: const BoxDecoration(
+                  color: _beige,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.warning_amber_rounded,
+                    color: _primary, size: 32),
+              ),
+              const SizedBox(height: 20),
+              Text('Batalkan perubahan?',
+                  textAlign: TextAlign.center,
+                  style: _t(17, weight: FontWeight.w700, color: _primary)),
+              const SizedBox(height: 10),
+              Text(
+                'Perubahan yang belum disimpan akan hilang.',
+                textAlign: TextAlign.center,
+                style: _t(13.5, color: _textMuted),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text('Ya, Batalkan',
+                      style: _t(15,
+                          weight: FontWeight.w600, color: Colors.white)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _beige,
+                    foregroundColor: _primary,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text('Lanjut Mengedit',
+                      style: _t(15,
+                          weight: FontWeight.w600, color: _primary)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (yakin == true && mounted) Navigator.pop(context);
   }
 
   @override
@@ -220,24 +360,7 @@ class _UbahProfilScreenState extends State<UbahProfilScreen> {
           width: double.infinity,
           height: 54,
           child: ElevatedButton(
-            onPressed: () {
-              // TODO: simpan ke API Laravel
-              final messenger = ScaffoldMessenger.of(context);
-              Navigator.pop(context);
-              messenger.showSnackBar(
-                SnackBar(
-                  content: Text('Profil berhasil diperbarui',
-                      style: GoogleFonts.poppins(
-                          fontSize: 13.5, color: Colors.white)),
-                  backgroundColor: const Color(0xFF7B1E2B),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                ),
-              );
-            },
+            onPressed: _simpan,
             style: ElevatedButton.styleFrom(
               backgroundColor: _primary,
               foregroundColor: Colors.white,
@@ -253,7 +376,7 @@ class _UbahProfilScreenState extends State<UbahProfilScreen> {
           width: double.infinity,
           height: 54,
           child: ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: _konfirmasiBatal,
             style: ElevatedButton.styleFrom(
               backgroundColor: _beige,
               foregroundColor: _primary,

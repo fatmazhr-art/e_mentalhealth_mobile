@@ -133,9 +133,35 @@ class _KonselorRiwayatTabState extends State<KonselorRiwayatTab> {
         Expanded(
           child: items.isEmpty
               ? Center(
-            child: Text('Tidak ada riwayat yang cocok.',
-                style: _t(14, color: _textMuted)),
-          )
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 96,
+                        height: 96,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF1E3D5),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.search_off_rounded,
+                            color: _primary, size: 48),
+                      ),
+                      const SizedBox(height: 20),
+                      Text('Riwayat tidak ditemukan',
+                          style: _t(16, weight: FontWeight.w700)),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          'Tidak ada riwayat chat yang cocok dengan pencarianmu. '
+                          'Coba kata kunci atau nomor mahasiswa lain.',
+                          textAlign: TextAlign.center,
+                          style: _t(13, color: _textMuted),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : ListView.separated(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
             itemCount: items.length,

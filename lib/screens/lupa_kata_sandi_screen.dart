@@ -77,12 +77,12 @@ class _LupaKataSandiScreenState extends State<LupaKataSandiScreen> {
               const SizedBox(height: 36),
 
               // Judul
-              Text('Lupa Kata Sandi?',
+              Text('Lupa Kata Sandi',
                   style: _t(26, weight: FontWeight.w800)),
               const SizedBox(height: 14),
               Text(
-                'Masukkan email akun konselormu. Kami akan mengirimkan '
-                'kode OTP untuk mereset kata sandi.',
+                'Masukkan email konselor yang terdaftar. Kami akan mengirim '
+                '6 digit kode verifikasi untuk mengatur ulang kata sandi kamu.',
                 style: _t(14.5, color: _textMuted),
               ),
               const SizedBox(height: 36),
@@ -142,6 +142,23 @@ class _LupaKataSandiScreenState extends State<LupaKataSandiScreen> {
                           style: _t(16,
                               weight: FontWeight.w600,
                               color: Colors.white)),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Link kembali ke login
+              Center(
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    'Kembali ke Login',
+                    style: _t(14,
+                        weight: FontWeight.w500,
+                        color: _primary).copyWith(
+                      decoration: TextDecoration.underline,
+                      decorationColor: _primary,
+                    ),
+                  ),
                 ),
               ),
             ],

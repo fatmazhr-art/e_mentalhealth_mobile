@@ -23,41 +23,94 @@ class BuatPasswordBaruScreen extends StatefulWidget {
 }
 
 class _BuatPasswordBaruScreenState extends State<BuatPasswordBaruScreen> {
-  final _lamaC = TextEditingController();
   final _baruC = TextEditingController();
   final _konfirmasiC = TextEditingController();
-  bool _obscureLama = true;
   bool _obscureBaru = true;
   bool _obscureKonfirmasi = true;
 
   bool get _minChar => _baruC.text.length >= 8;
   bool get _hasComplex =>
       RegExp(r'(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*])').hasMatch(_baruC.text);
-  bool get _different =>
-      _baruC.text.isNotEmpty && _baruC.text != _lamaC.text;
+  bool get _match =>
+      _baruC.text.isNotEmpty && _baruC.text == _konfirmasiC.text;
 
   int get _strength {
     int s = 0;
     if (_minChar) s++;
     if (_hasComplex) s++;
-    if (_different) s++;
+    if (_match) s++;
     return s;
   }
 
   @override
   void dispose() {
-    _lamaC.dispose();
     _baruC.dispose();
     _konfirmasiC.dispose();
     super.dispose();
   }
 
-  void _simpan() {
-    // TODO: reset password via API Laravel, lalu kembali ke login
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const KonselorLoginScreen()),
-      (route) => false,
+  Future<void> _simpan() async {
+    // TODO: reset password via API Laravel
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: const Color(0xFF7A5A5F).withValues(alpha: 0.55),
+      builder: (_) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: const BoxDecoration(
+                  color: _primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_rounded,
+                    color: Colors.white, size: 36),
+              ),
+              const SizedBox(height: 20),
+              Text('Kata sandi berhasil diubah',
+                  textAlign: TextAlign.center,
+                  style: _t(17, weight: FontWeight.w700, color: _primary)),
+              const SizedBox(height: 10),
+              Text(
+                'Silakan masuk kembali dengan kata sandi barumu.',
+                textAlign: TextAlign.center,
+                style: _t(13.5, color: _textMuted),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // tutup dialog
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const KonselorLoginScreen()),
+                      (route) => false,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text('Masuk',
+                      style: _t(15, weight: FontWeight.w600, color: Colors.white)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -93,12 +146,6 @@ class _BuatPasswordBaruScreenState extends State<BuatPasswordBaruScreen> {
               const SizedBox(height: 32),
 
               // Form
-              _label('Password lama'),
-              const SizedBox(height: 8),
-              _passField(_lamaC, _obscureLama,
-                  () => setState(() => _obscureLama = !_obscureLama)),
-              const SizedBox(height: 18),
-
               _label('Password baru'),
               const SizedBox(height: 8),
               _passField(_baruC, _obscureBaru,
@@ -225,7 +272,7 @@ class _BuatPasswordBaruScreenState extends State<BuatPasswordBaruScreen> {
     final criteria = [
       (label: 'Minimal 8 karakter', met: _minChar),
       (label: 'Ada huruf besar, angka, karakter spesial', met: _hasComplex),
-      (label: 'Berbeda dari Password lama', met: _different),
+      (label: 'Password baru & konfirmasi cocok', met: _match),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
